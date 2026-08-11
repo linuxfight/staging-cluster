@@ -1,0 +1,24 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+
+version: '3'
+
+tasks:
+  encrypt:
+    silent: true
+    vars:
+      FILES_RAW:
+        sh: |
+          find . -type f \( \
+            -name "*.env" \
+          \) | grep -v '\.enc$'
+    cmds:
+      - |
+        {{range $file := .FILES_RAW | splitLines}}
+        if [ ! -f "{{$file}}.enc" ] || [ "{{$file}}" -nt "{{$file}}.enc" ]; then
+          echo "Encrypting {{$file}} → {{$file}}.enc"
+          sops -e "{{$file}}" > "{{$file}}.enc"
+          git add "{{$file}}.enc"
+        else
+          echo "Skipping {{$file}} (already encrypted)"
+        fi
+        {{end}}

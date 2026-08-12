@@ -1,0 +1,43 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: netbird
+  namespace: netbird
+spec:
+  interval: 1h
+  chart:
+    spec:
+      chart: netbird
+      version: "1.x.x" # Pin this to the specific version you want
+      sourceRef:
+        kind: HelmRepository
+        name: netbird
+        namespace: flux-system
+  install:
+    createNamespace: true
+  values:
+    # Disable default Ingress to use Gateway API
+    ingress:
+      enabled: false
+    dashboard:
+      ingress:
+        enabled: false
+
+    # Configure NetBird to use PostgreSQL instead of SQLite
+    netbird:
+      store:
+        engine: postgres
+
+    # Pass the CNPG auto-generated Secret to the NetBird server containers
+    envFrom:
+      - secretRef:
+          name: netbird-db-app
+    env:
+      - name: NETBIRD_STORE_ENGINE
+        value: "postgres"
+      - name: NETBIRD_STORE_DSN
+        # CNPG populates the 'uri' key in the generated secret
+        valueFrom:
+          secretKeyRef:
+            name: netbird-db-app
+            key: uri

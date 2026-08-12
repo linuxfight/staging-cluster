@@ -1,0 +1,14 @@
+apiVersion: gateway.networking.k8s.io/v1alpha2
+kind: UDPRoute
+metadata:
+  name: netbird-stun
+  namespace: netbird
+spec:
+  parentRefs:
+    - name: kube-gateway
+      namespace: nginx-gateway
+      sectionName: stun-netbird
+  rules:
+    - backendRefs:
+        - name: netbird-coturn
+          port: 3478

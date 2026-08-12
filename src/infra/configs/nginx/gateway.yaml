@@ -17,3 +17,10 @@ spec:
         mode: Terminate
         certificateRefs:
           - name: netbird-tls
+
+    - name: stun-netbird
+      port: 3478
+      protocol: UDP
+      allowedRoutes:
+        namespaces:
+          from: All

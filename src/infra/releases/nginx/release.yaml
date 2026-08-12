@@ -18,3 +18,5 @@ spec:
       type: LoadBalancer
     nginxGateway:
       gatewayClassName: nginx
+      gwAPIExperimentalFeatures:
+        enable: true

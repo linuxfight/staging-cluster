@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: netbird
-      version: "0.2.0"
+      version: "1.9.0"
       sourceRef:
         kind: HelmRepository
         name: netbird
@@ -18,16 +18,29 @@ spec:
   values:
     ingress:
       enabled: false
+
     dashboard:
       ingress:
         enabled: false
+      image:
+        tag: "v2.90.10"
 
-    # Configure NetBird to use PostgreSQL instead of SQLite
+    management:
+      image:
+        tag: "0.76.3"
+
+    signal:
+      image:
+        tag: "0.76.3"
+
+    relay:
+      image:
+        tag: "0.76.3"
+
     netbird:
       store:
         engine: postgres
 
-    # Pass the CNPG auto-generated Secret to the NetBird server containers
     envFrom:
       - secretRef:
           name: netbird-db-app
@@ -35,7 +48,6 @@ spec:
       - name: NETBIRD_STORE_ENGINE
         value: "postgres"
       - name: NETBIRD_STORE_DSN
-        # CNPG populates the 'uri' key in the generated secret
         valueFrom:
           secretKeyRef:
             name: netbird-db-app

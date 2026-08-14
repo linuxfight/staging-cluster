@@ -1,0 +1,146 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: authelia
+  namespace: authelia
+spec:
+  interval: 1h
+  chart:
+    spec:
+      chart: authelia
+      version: "0.11.6"
+      sourceRef:
+        kind: HelmRepository
+        name: authelia
+        namespace: flux-system
+  values:
+    enabled: true
+
+    pod:
+      kind: 'Deployment'
+      replicas: 1
+
+    service:
+      type: 'ClusterIP'
+      port: 9091
+
+    rbac:
+      enabled: true
+      serviceAccountName: 'authelia'
+
+    # Gateway API configuration
+    ingress:
+      enabled: true
+
+      gatewayAPI:
+        enabled: true
+        hostnamesOverride:
+          - 'id.cloud.lxft.dev'
+        parentRefs:
+          - name: kube-gateway
+            namespace: nginx-gateway
+            sectionName: https-id
+
+      tls:
+        enabled: true
+        secret: 'authelia-tls'
+
+    configMap:
+      disabled: false
+
+      server:
+        port: 9091
+        path: ''
+
+      authentication_backend:
+        file:
+          enabled: true
+          path: '/secrets/authelia-secrets/users_database.yml'
+          watch: false
+
+      session:
+        name: 'authelia_session'
+        same_site: 'lax'
+        expiration: '1 hour'
+        inactivity: '5 minutes'
+        remember_me: '1 month'
+        encryption_key:
+          secret_name: 'authelia-secrets'
+          path: 'session.encryption.key'
+        cookies:
+          - subdomain: 'id'
+            domain: 'cloud.lxft.dev'
+            default_redirection_url: 'https://id.cloud.lxft.dev/'
+
+      storage:
+        encryption_key:
+          secret_name: 'authelia-secrets'
+          path: 'storage.encryption.key'
+        postgres:
+          enabled: true
+          address: 'tcp://authelia-cnpg-rw.authelia.svc.cluster.local:5432'
+          database: 'authelia'
+          username: 'authelia'
+          schema: 'public'
+          timeout: '5 seconds'
+          password:
+            disabled: false
+            secret_name: 'authelia-cnpg-app'
+            path: 'password'
+
+      identity_validation:
+        reset_password:
+          secret:
+            secret_name: 'authelia-secrets'
+            path: 'identity_validation.reset_password.jwt.hmac.key'
+
+      totp:
+        disable: false
+        issuer: 'Authelia'
+        skew: 1
+        secret_size: 32
+        algorithm: 'SHA1'
+        digits: 6
+        period: 30
+
+      webauthn:
+        disable: false
+        enable_passkey_login: true
+        timeout: '60 seconds'
+        display_name: 'Authelia'
+        attestation_conveyance_preference: 'indirect'
+
+      notifier:
+        disable_startup_check: true
+        filesystem:
+          enabled: true
+          filename: '/config/notification.txt'
+
+      access_control:
+        default_policy: 'two_factor'
+        rules:
+          - domain: 'id.cloud.lxft.dev'
+            policy: 'one_factor'
+          - domain: '*.cloud.lxft.dev'
+            policy: 'two_factor'
+
+      theme: 'auto'
+      default_2fa_method: 'totp'
+
+    secret:
+      mountPath: '/secrets'
+      additionalSecrets:
+        authelia-secrets:
+          items:
+            - key: 'identity_validation.reset_password.jwt.hmac.key'
+              path: 'identity_validation.reset_password.jwt.hmac.key'
+            - key: 'session.encryption.key'
+              path: 'session.encryption.key'
+            - key: 'storage.encryption.key'
+              path: 'storage.encryption.key'
+            - key: 'users_database.yml'
+              path: 'users_database.yml'
+        authelia-cnpg-app:
+          items:
+            - key: 'password'
+              path: 'password'

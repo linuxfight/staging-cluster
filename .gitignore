@@ -1,2 +1,3 @@
 staging.agekey
 .env
+.DS_Store

@@ -6,6 +6,18 @@ metadata:
 spec:
   gatewayClassName: nginx
   listeners:
+    - name: https-id
+      port: 443
+      protocol: HTTPS
+      hostname: id.cloud.lxft.dev
+      allowedRoutes:
+        namespaces:
+          from: All
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: authelia-tls
+
     - name: https-netbird
       port: 443
       protocol: HTTPS

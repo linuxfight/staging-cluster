@@ -1,0 +1,36 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: netbird-cnpg
+  namespace: netbird
+spec:
+  instances: 1
+
+  # PostgreSQL version
+  imageName: ghcr.io/cloudnative-pg/postgresql:18.4-minimal-trixie
+
+  # Bootstrap configuration - creates database and user
+  bootstrap:
+    initdb:
+      database: netbird
+      owner: netbird
+
+  # Storage configuration
+  storage:
+    size: 1Gi
+    storageClass: local-path
+
+  # Resource limits
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "100m"
+    limits:
+      memory: "512Mi"
+      cpu: "500m"
+
+  # PostgreSQL configuration
+  postgresql:
+    parameters:
+      max_connections: "100"
+      shared_buffers: "128MB"

@@ -1,0 +1,107 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: netbird
+  namespace: netbird
+spec:
+  interval: 1h
+  chart:
+    spec:
+      chart: netbird
+      sourceRef:
+        kind: HelmRepository
+        name: helmforge
+        namespace: flux-system
+
+  valuesFrom:
+    - kind: Secret
+      name: netbird-secrets
+      valuesKey: authSecret
+      targetPath: server.authSecret
+      optional: false
+
+  values:
+    server:
+      publicUrl: https://cloud.lxft.dev
+      disableAnonymousMetrics: true
+      disableGeoliteUpdate: true
+      auth:
+        issuer: https://id.cloud.lxft.dev
+        localAuthDisabled: true
+      service:
+        type: ClusterIP
+
+    dashboard:
+      enabled: true
+      auth:
+        clientId: netbird-dashboard
+        audience: netbird-dashboard
+        supportedScopes: openid profile email groups
+        redirectUri: /nb-auth
+        silentRedirectUri: /nb-silent-auth
+
+    database:
+      mode: external
+      external:
+        engine: postgres
+        host: netbird-cnpg-rw.netbird.svc.cluster.local
+        port: 5432
+        name: netbird
+        username: netbird
+        existingSecret: netbird-cnpg-app
+        existingSecretPasswordKey: password
+        sslMode: require
+
+    gatewayAPI:
+      enabled: false
+
+    extraManifests:
+      - apiVersion: gateway.networking.k8s.io/v1
+        kind: HTTPRoute
+        metadata:
+          name: netbird-dashboard
+        spec:
+          parentRefs:
+            - name: kube-gateway
+              namespace: nginx-gateway
+              sectionName: https-netbird
+          hostnames: ["cloud.lxft.dev"]
+          rules:
+            - matches:
+                - path: { type: PathPrefix, value: / }
+              backendRefs:
+                - name: netbird-dashboard
+                  port: 80
+
+      - apiVersion: gateway.networking.k8s.io/v1
+        kind: HTTPRoute
+        metadata:
+          name: netbird-server
+        spec:
+          parentRefs:
+            - name: kube-gateway
+              namespace: nginx-gateway
+              sectionName: https-netbird
+          hostnames: ["cloud.lxft.dev"]
+          rules:
+            - matches:
+                - path: { type: PathPrefix, value: /api }
+                - path: { type: PathPrefix, value: /management.ManagementService/ }
+                - path: { type: PathPrefix, value: /signalkicks.SignalService/ }
+              backendRefs:
+                - name: netbird-server
+                  port: 80
+
+      - apiVersion: gateway.networking.k8s.io/v1alpha2
+        kind: UDPRoute
+        metadata:
+          name: netbird-stun
+        spec:
+          parentRefs:
+            - name: kube-gateway
+              namespace: nginx-gateway
+              sectionName: stun-netbird
+          rules:
+            - backendRefs:
+                - name: netbird-server
+                  port: 3478

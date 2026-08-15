@@ -19,6 +19,16 @@ spec:
       valuesKey: authSecret
       targetPath: server.authSecret
       optional: false
+    - kind: Secret
+      name: netbird-secrets
+      valuesKey: ownerEmail
+      targetPath: server.auth.owner.email
+      optional: false
+    - kind: Secret
+      name: netbird-secrets
+      valuesKey: ownerPassword
+      targetPath: server.auth.owner.password
+      optional: false
 
   values:
     server:
@@ -26,19 +36,12 @@ spec:
       disableAnonymousMetrics: true
       disableGeoliteUpdate: true
       auth:
-        issuer: https://id.cloud.lxft.dev
-        localAuthDisabled: true
+        issuer: https://cloud.lxft.dev/oauth2
       service:
         type: ClusterIP
 
     dashboard:
       enabled: true
-      auth:
-        clientId: 'E7Aku2J-60CsjZx0YCE-5k3aQ45s1n8-gGuh1UNuNnKM12maJV_1SwHNwvqGmSfhHm8wIB0w'
-        audience: netbird-dashboard
-        supportedScopes: openid profile email groups
-        redirectUri: /nb-auth
-        silentRedirectUri: /nb-silent-auth
 
     database:
       mode: external

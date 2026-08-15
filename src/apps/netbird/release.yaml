@@ -34,7 +34,7 @@ spec:
     dashboard:
       enabled: true
       auth:
-        clientId: netbird-dashboard
+        clientId: 'E7Aku2J-60CsjZx0YCE-5k3aQ45s1n8-gGuh1UNuNnKM12maJV_1SwHNwvqGmSfhHm8wIB0w'
         audience: netbird-dashboard
         supportedScopes: openid profile email groups
         redirectUri: /nb-auth

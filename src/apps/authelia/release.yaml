@@ -74,6 +74,10 @@ spec:
               - 'revocation'
               - 'introspection'
 
+          claims_policies:
+            netbird:
+              id_token: [email, groups, profile]
+
           clients:
             - client_id: 'E7Aku2J-60CsjZx0YCE-5k3aQ45s1n8-gGuh1UNuNnKM12maJV_1SwHNwvqGmSfhHm8wIB0w'
               client_name: 'NetBird'
@@ -84,6 +88,8 @@ spec:
               redirect_uris:
                 - 'https://cloud.lxft.dev/oauth2/callback'
                 - 'http://localhost:53000'
+              audience:
+                - 'E7Aku2J-60CsjZx0YCE-5k3aQ45s1n8-gGuh1UNuNnKM12maJV_1SwHNwvqGmSfhHm8wIB0w'
               scopes:
                 - 'openid'
                 - 'email'

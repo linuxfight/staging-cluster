@@ -35,13 +35,21 @@ spec:
       publicUrl: https://cloud.lxft.dev
       disableAnonymousMetrics: true
       disableGeoliteUpdate: true
+      image:
+        tag: "0.77.0"
       auth:
-        issuer: https://cloud.lxft.dev/oauth2
+        issuer: https://id.cloud.lxft.dev/oauth2
+        localAuthDisabled: true
       service:
         type: ClusterIP
 
     dashboard:
       enabled: true
+      image:
+        tag: "v2.91.1"
+      auth:
+        clientId: 'E7Aku2J-60CsjZx0YCE-5k3aQ45s1n8-gGuh1UNuNnKM12maJV_1SwHNwvqGmSfhHm8wIB0w'
+        audience: 'E7Aku2J-60CsjZx0YCE-5k3aQ45s1n8-gGuh1UNuNnKM12maJV_1SwHNwvqGmSfhHm8wIB0w'
 
     postgresql:
       enabled: false

@@ -7,7 +7,7 @@ spec:
   interval: 10m
   wait: true
   timeout: 5m
-  path: ./src/apps/netbitd
+  path: ./src/apps/netbird
   prune: true
   sourceRef:
     kind: GitRepository

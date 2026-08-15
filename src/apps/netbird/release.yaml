@@ -43,6 +43,9 @@ spec:
     dashboard:
       enabled: true
 
+    postgresql:
+      enabled: false
+
     database:
       mode: external
       external:

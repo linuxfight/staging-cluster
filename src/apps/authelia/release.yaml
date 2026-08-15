@@ -67,6 +67,9 @@ spec:
 
           cors:
             allowed_origins_from_client_redirect_uris: true
+            allowed_origins:
+              - 'https://cloud.lxft.dev'
+              - 'http://localhost:53000'
             endpoints:
               - 'userinfo'
               - 'authorization'

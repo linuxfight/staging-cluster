@@ -85,7 +85,7 @@ spec:
               appProtocol: kubernetes.io/h2c
 
       # 2. GRPCRoute: gRPC Paths (Forces HTTP/2 via the h2c Service)
-      - apiVersion: gateway.networking.k8s.io/v1alpha2 # Use v1 if your cluster is >=1.29
+      - apiVersion: gateway.networking.k8s.io/v1
         kind: GRPCRoute
         metadata:
           name: netbird-server-grpc

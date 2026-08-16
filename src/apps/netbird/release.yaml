@@ -92,9 +92,7 @@ spec:
       - apiVersion: gateway.networking.k8s.io/v1
         kind: HTTPRoute
         metadata:
-          name: netbird-server-grpc
-          annotations:
-            nginx.gateway.nginx.org/backend-protocol: "HTTP2"
+          name: netbird-grpc-http
         spec:
           parentRefs:
             - name: kube-gateway
@@ -103,8 +101,16 @@ spec:
           hostnames: ["cloud.lxft.dev"]
           rules:
             - matches:
-                - path: { type: PathPrefix, value: /signalexchange.SignalExchange/ }
                 - path: { type: PathPrefix, value: /management.ManagementService/ }
+                  headers:
+                    - name: Content-Type
+                      value: application/grpc
+                      type: Exact
+                - path: { type: PathPrefix, value: /signalexchange.SignalExchange/ }
+                  headers:
+                    - name: Content-Type
+                      value: application/grpc
+                      type: Exact
               backendRefs:
                 - name: netbird-server
                   port: 80

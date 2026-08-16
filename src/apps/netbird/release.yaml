@@ -96,20 +96,20 @@ spec:
               sectionName: https-netbird
           hostnames: ["cloud.lxft.dev"]
           rules:
-            - matches:
-                - method:
-                    service: management.ManagementService
-                    method: ""
-              backendRefs:
-                - name: netbird-server-h2c
-                  port: 9090
-            - matches:
-                - method:
-                    service: signalexchange.SignalExchange
-                    method: ""
-              backendRefs:
-                - name: netbird-server-h2c
-                  port: 9000
+              - matches:
+                  - method:
+                      type: Exact
+                      service: management.ManagementService
+                backendRefs:
+                  - name: netbird-server-h2c
+                    port: 9090
+              - matches:
+                  - method:
+                      type: Exact
+                      service: signalexchange.SignalExchange
+                backendRefs:
+                  - name: netbird-server-h2c
+                    port: 9000
 
       - apiVersion: gateway.networking.k8s.io/v1
         kind: HTTPRoute

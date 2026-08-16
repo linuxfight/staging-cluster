@@ -103,10 +103,10 @@ spec:
               backendRefs:
                 - name: netbird-server-h2c
                   port: 9090
-                  - matches:
-                            - method:
-                                service: signalexchange.SignalExchange
-                                method: ""
+            - matches:
+                - method:
+                    service: signalexchange.SignalExchange
+                    method: ""
               backendRefs:
                 - name: netbird-server-h2c
                   port: 9000

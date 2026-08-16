@@ -67,24 +67,24 @@ spec:
       enabled: false
 
     extraManifests:
-      # 1. Create an h2c Service for gRPC (Replicates Traefik's netbird-server-h2c)
-      # NGF strictly requires appProtocol: kubernetes.io/h2c to speak HTTP/2 to the backend.
       - apiVersion: v1
         kind: Service
         metadata:
           name: netbird-server-h2c
         spec:
-          # IMPORTANT: Verify these selectors match your actual netbird-server pods!
           selector:
             app.kubernetes.io/name: netbird
             app.kubernetes.io/component: server
           ports:
-            - name: grpc
-              port: 80
-              targetPort: 80
+            - name: management-grpc
+              port: 9090
+              targetPort: 9090
+              appProtocol: kubernetes.io/h2c
+            - name: signal-grpc
+              port: 9000
+              targetPort: 9000
               appProtocol: kubernetes.io/h2c
 
-      # 2. GRPCRoute: gRPC Paths (Forces HTTP/2 via the h2c Service)
       - apiVersion: gateway.networking.k8s.io/v1
         kind: GRPCRoute
         metadata:
@@ -101,15 +101,14 @@ spec:
                     service: management.ManagementService
               backendRefs:
                 - name: netbird-server-h2c
-                  port: 80
+                  port: 9090
             - matches:
                 - method:
                     service: signalexchange.SignalExchange
               backendRefs:
                 - name: netbird-server-h2c
-                  port: 80
+                  port: 9000
 
-      # 3. HTTPRoute: Backend / REST / OIDC Paths (Uses standard HTTP/1.1 Service)
       - apiVersion: gateway.networking.k8s.io/v1
         kind: HTTPRoute
         metadata:
@@ -126,13 +125,11 @@ spec:
                 - path: { type: PathPrefix, value: /ws-proxy/ }
                 - path: { type: PathPrefix, value: /api }
                 - path: { type: PathPrefix, value: /oauth2 }
-                # CRUCIAL for OIDC: Allows the dashboard to fetch the discovery document
                 - path: { type: PathPrefix, value: /.well-known }
               backendRefs:
                 - name: netbird-server
                   port: 80
 
-      # 4. HTTPRoute: Dashboard Catch-All
       - apiVersion: gateway.networking.k8s.io/v1
         kind: HTTPRoute
         metadata:
@@ -150,7 +147,6 @@ spec:
                 - name: netbird-dashboard
                   port: 80
 
-      # 5. UDPRoute: STUN (Unchanged)
       - apiVersion: gateway.networking.k8s.io/v1alpha2
         kind: UDPRoute
         metadata:

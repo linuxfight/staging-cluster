@@ -97,14 +97,12 @@ spec:
           hostnames: ["cloud.lxft.dev"]
           rules:
             - matches:
-                - method:
-                    service: management.ManagementService
+                - service: management.ManagementService
               backendRefs:
                 - name: netbird-server-h2c
                   port: 9090
             - matches:
-                - method:
-                    service: signalexchange.SignalExchange
+                - service: signalexchange.SignalExchange
               backendRefs:
                 - name: netbird-server-h2c
                   port: 9000

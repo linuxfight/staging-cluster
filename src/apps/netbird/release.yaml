@@ -37,9 +37,6 @@ spec:
       disableGeoliteUpdate: true
       image:
         tag: "0.77.0"
-      auth:
-        issuer: https://cloud.lxft.dev
-        localAuthDisabled: false
       service:
         type: ClusterIP
 

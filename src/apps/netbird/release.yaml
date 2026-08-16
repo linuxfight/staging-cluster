@@ -96,15 +96,17 @@ spec:
           rules:
             - matches:
                 - method:
-                    type: Exact
+                    type: RegularExpression
                     service: management.ManagementService
+                    method: ".*"
               backendRefs:
                 - name: netbird-server-h2c
                   port: 9090
             - matches:
                 - method:
-                    type: Exact
+                    type: RegularExpression
                     service: signalexchange.SignalExchange
+                    method: ".*"
               backendRefs:
                 - name: netbird-server-h2c
                   port: 9000

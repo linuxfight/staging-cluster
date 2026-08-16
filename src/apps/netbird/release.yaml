@@ -86,26 +86,31 @@ spec:
               appProtocol: kubernetes.io/h2c
 
       - apiVersion: gateway.networking.k8s.io/v1
-        kind: GRPCRoute
+        kind: HTTPRoute
         metadata:
           name: netbird-server-grpc
+          namespace: netbird
         spec:
+          hostnames: ["cloud.lxft.dev"]
           parentRefs:
             - name: kube-gateway
               namespace: nginx-gateway
               sectionName: https-netbird
-          hostnames: ["cloud.lxft.dev"]
           rules:
             - matches:
-                - path: { type: PathPrefix, value: /management.ManagementService/ }
-              backendRefs:
-                - name: netbird-server-h2c
-                  port: 9090
+              - path:
+                  type: PathPrefix
+                  value: /management.ManagementService/
+                backendRefs:
+                  - name: netbird-server-h2c
+                    port: 9090
             - matches:
-                - path: { type: PathPrefix, value: /signalexchange.SignalExchange/ }
-              backendRefs:
-                - name: netbird-server-h2c
-                  port: 9000
+              - path:
+                  type: PathPrefix
+                  value: /signalexchange.SignalExchange/
+                backendRefs:
+                  - name: netbird-server-h2c
+                    port: 9000
 
       - apiVersion: gateway.networking.k8s.io/v1
         kind: HTTPRoute

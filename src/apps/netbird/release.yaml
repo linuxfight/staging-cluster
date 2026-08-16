@@ -79,14 +79,12 @@ spec:
             - name: management-grpc
               port: 9090
               targetPort: 9090
-              appProtocol: kubernetes.io/h2c
             - name: signal-grpc
               port: 9000
               targetPort: 9000
-              appProtocol: kubernetes.io/h2c
 
       - apiVersion: gateway.networking.k8s.io/v1
-        kind: HTTPRoute
+        kind: GRPCRoute
         metadata:
           name: netbird-server-grpc
         spec:
@@ -97,16 +95,14 @@ spec:
               sectionName: https-netbird
           rules:
             - matches:
-                - path:
-                    type: PathPrefix
-                    value: /management.ManagementService/
+                - method:
+                  service: management.ManagementService
               backendRefs:
                 - name: netbird-server-h2c
                   port: 9090
             - matches:
-                - path:
-                    type: PathPrefix
-                    value: /signalexchange.SignalExchange/
+                - method:
+                  service: signalexchange.SignalExchange
               backendRefs:
                 - name: netbird-server-h2c
                   port: 9000

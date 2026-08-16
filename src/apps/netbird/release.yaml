@@ -68,14 +68,13 @@ spec:
 
     extraManifests:
       # 1. Create an h2c Service for gRPC (Replicates Traefik's netbird-server-h2c)
-      # NGF requires `appProtocol: kubernetes.io/h2c` to speak HTTP/2 to the backend.
+      # NGF strictly requires appProtocol: kubernetes.io/h2c to speak HTTP/2 to the backend.
       - apiVersion: v1
         kind: Service
         metadata:
           name: netbird-server-h2c
         spec:
           # IMPORTANT: Verify these selectors match your actual netbird-server pods!
-          # You can check by running: kubectl get svc netbird-server -n netbird -o yaml
           selector:
             app.kubernetes.io/name: netbird
             app.kubernetes.io/component: server
@@ -85,9 +84,9 @@ spec:
               targetPort: 80
               appProtocol: kubernetes.io/h2c
 
-      # 2. HTTPRoute: gRPC Paths (Uses the h2c Service)
-      - apiVersion: gateway.networking.k8s.io/v1
-        kind: HTTPRoute
+      # 2. GRPCRoute: gRPC Paths (Forces HTTP/2 via the h2c Service)
+      - apiVersion: gateway.networking.k8s.io/v1alpha2 # Use v1 if your cluster is >=1.29
+        kind: GRPCRoute
         metadata:
           name: netbird-server-grpc
         spec:
@@ -95,12 +94,17 @@ spec:
             - name: kube-gateway
               namespace: nginx-gateway
               sectionName: https-netbird
-          # Note: Change to "de1.lxft.dev" here if you are migrating the domain for this K8s deployment
           hostnames: ["cloud.lxft.dev"]
           rules:
             - matches:
-                - path: { type: PathPrefix, value: /signalexchange.SignalExchange/ }
-                - path: { type: PathPrefix, value: /management.ManagementService/ }
+                - method:
+                    service: management.ManagementService
+              backendRefs:
+                - name: netbird-server-h2c
+                  port: 80
+            - matches:
+                - method:
+                    service: signalexchange.SignalExchange
               backendRefs:
                 - name: netbird-server-h2c
                   port: 80
@@ -128,7 +132,7 @@ spec:
                 - name: netbird-server
                   port: 80
 
-      # 4. HTTPRoute: Dashboard Catch-All (Lowest Priority, just like Traefik priority 1)
+      # 4. HTTPRoute: Dashboard Catch-All
       - apiVersion: gateway.networking.k8s.io/v1
         kind: HTTPRoute
         metadata:

@@ -91,6 +91,8 @@ spec:
               authorization_policy: 'two_factor'
               redirect_uris:
                 - 'https://cloud.lxft.dev/oauth2/callback'
+                - 'https://cloud.lxft.dev/nb-auth'
+                - 'https://cloud.lxft.dev/nb-silent-auth'
                 - 'http://localhost:53000'
               audience:
                 - 'E7Aku2J-60CsjZx0YCE-5k3aQ45s1n8-gGuh1UNuNnKM12maJV_1SwHNwvqGmSfhHm8wIB0w'

@@ -67,6 +67,45 @@ spec:
       enabled: false
 
     extraManifests:
+      # 1. Create an h2c Service for gRPC (Replicates Traefik's netbird-server-h2c)
+      # NGF requires `appProtocol: kubernetes.io/h2c` to speak HTTP/2 to the backend.
+      - apiVersion: v1
+        kind: Service
+        metadata:
+          name: netbird-server-h2c
+        spec:
+          # IMPORTANT: Verify these selectors match your actual netbird-server pods!
+          # You can check by running: kubectl get svc netbird-server -n netbird -o yaml
+          selector:
+            app.kubernetes.io/name: netbird
+            app.kubernetes.io/component: server
+          ports:
+            - name: grpc
+              port: 80
+              targetPort: 80
+              appProtocol: kubernetes.io/h2c
+
+      # 2. HTTPRoute: gRPC Paths (Uses the h2c Service)
+      - apiVersion: gateway.networking.k8s.io/v1
+        kind: HTTPRoute
+        metadata:
+          name: netbird-server-grpc
+        spec:
+          parentRefs:
+            - name: kube-gateway
+              namespace: nginx-gateway
+              sectionName: https-netbird
+          # Note: Change to "de1.lxft.dev" here if you are migrating the domain for this K8s deployment
+          hostnames: ["cloud.lxft.dev"]
+          rules:
+            - matches:
+                - path: { type: PathPrefix, value: /signalexchange.SignalExchange/ }
+                - path: { type: PathPrefix, value: /management.ManagementService/ }
+              backendRefs:
+                - name: netbird-server-h2c
+                  port: 80
+
+      # 3. HTTPRoute: Backend / REST / OIDC Paths (Uses standard HTTP/1.1 Service)
       - apiVersion: gateway.networking.k8s.io/v1
         kind: HTTPRoute
         metadata:
@@ -79,47 +118,17 @@ spec:
           hostnames: ["cloud.lxft.dev"]
           rules:
             - matches:
+                - path: { type: PathPrefix, value: /relay }
+                - path: { type: PathPrefix, value: /ws-proxy/ }
                 - path: { type: PathPrefix, value: /api }
-              backendRefs:
-                - name: netbird-server
-                  port: 80
-            - matches:
                 - path: { type: PathPrefix, value: /oauth2 }
-              backendRefs:
-                - name: netbird-server
-                  port: 80
-            - matches:
+                # CRUCIAL for OIDC: Allows the dashboard to fetch the discovery document
                 - path: { type: PathPrefix, value: /.well-known }
               backendRefs:
                 - name: netbird-server
                   port: 80
 
-      - apiVersion: gateway.networking.k8s.io/v1
-        kind: GRPCRoute
-        metadata:
-          name: netbird-server-grpc
-        spec:
-          parentRefs:
-            - name: kube-gateway
-              namespace: nginx-gateway
-              sectionName: https-netbird
-          hostnames: ["cloud.lxft.dev"]
-          rules:
-            - matches:
-                - method:
-                    type: Exact
-                    service: management.ManagementService
-              backendRefs:
-                - name: netbird-server
-                  port: 80
-            - matches:
-                - method:
-                    type: Exact
-                    service: signalkicks.SignalService
-              backendRefs:
-                - name: netbird-server
-                  port: 80
-
+      # 4. HTTPRoute: Dashboard Catch-All (Lowest Priority, just like Traefik priority 1)
       - apiVersion: gateway.networking.k8s.io/v1
         kind: HTTPRoute
         metadata:
@@ -137,6 +146,7 @@ spec:
                 - name: netbird-dashboard
                   port: 80
 
+      # 5. UDPRoute: STUN (Unchanged)
       - apiVersion: gateway.networking.k8s.io/v1alpha2
         kind: UDPRoute
         metadata:

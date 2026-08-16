@@ -70,6 +70,7 @@ spec:
             allowed_origins:
               - 'https://cloud.lxft.dev'
               - 'http://localhost:53000'
+
             endpoints:
               - 'userinfo'
               - 'authorization'
@@ -172,6 +173,12 @@ spec:
       access_control:
         default_policy: 'two_factor'
         rules:
+          - domain: 'id.cloud.lxft.dev'
+            resources:
+              - '^/\.well-known/.*$'
+              - '^/oauth2/\.well-known/.*$'
+              - '^/api/oidc/.*$'
+            policy: 'bypass'
           - domain: 'id.cloud.lxft.dev'
             policy: 'one_factor'
           - domain: '*.cloud.lxft.dev'

@@ -67,50 +67,6 @@ spec:
       enabled: false
 
     extraManifests:
-      - apiVersion: v1
-        kind: Service
-        metadata:
-          name: netbird-server-h2c
-        spec:
-          selector:
-            app.kubernetes.io/name: netbird
-            app.kubernetes.io/component: server
-          ports:
-            - name: management-grpc
-              port: 9090
-              targetPort: 9090
-            - name: signal-grpc
-              port: 9000
-              targetPort: 9000
-
-      - apiVersion: gateway.networking.k8s.io/v1
-        kind: GRPCRoute
-        metadata:
-          name: netbird-server-grpc
-        spec:
-          hostnames: ["cloud.lxft.dev"]
-          parentRefs:
-            - name: kube-gateway
-              namespace: nginx-gateway
-              sectionName: https-netbird
-          rules:
-            - matches:
-                - method:
-                    type: RegularExpression
-                    service: management.ManagementService
-                    method: ".*"
-              backendRefs:
-                - name: netbird-server-h2c
-                  port: 9090
-            - matches:
-                - method:
-                    type: RegularExpression
-                    service: signalexchange.SignalExchange
-                    method: ".*"
-              backendRefs:
-                - name: netbird-server-h2c
-                  port: 9000
-
       - apiVersion: gateway.networking.k8s.io/v1
         kind: HTTPRoute
         metadata:
@@ -123,6 +79,20 @@ spec:
           hostnames: ["cloud.lxft.dev"]
           rules:
             - matches:
+                - path: { type: PathPrefix, value: /management.ManagementService/ }
+              backendRefs:
+                - name: netbird-server
+                  port: 9090
+                  weight: 1
+
+            - matches:
+                - path: { type: PathPrefix, value: /signalexchange.SignalExchange/ }
+              backendRefs:
+                - name: netbird-server
+                  port: 9000
+                  weight: 1
+
+            - matches:
                 - path: { type: PathPrefix, value: /relay }
                 - path: { type: PathPrefix, value: /ws-proxy/ }
                 - path: { type: PathPrefix, value: /api }
@@ -131,6 +101,7 @@ spec:
               backendRefs:
                 - name: netbird-server
                   port: 80
+                  weight: 1
 
       - apiVersion: gateway.networking.k8s.io/v1
         kind: HTTPRoute

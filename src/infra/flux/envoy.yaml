@@ -1,13 +1,13 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: infra-nginx
+  name: infra-envoy
   namespace: flux-system
 spec:
   interval: 1h
   wait: true
   timeout: 5m
-  path: ./src/infra/releases/nginx
+  path: ./src/infra/releases/envoy
   prune: false
   sourceRef:
     kind: GitRepository

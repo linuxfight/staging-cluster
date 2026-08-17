@@ -5,5 +5,5 @@ resources:
   - cert-manager-config.yaml
   - cnpg.yaml
   - flux-notify.yaml
-  - nginx.yaml
-  - nginx-config.yaml
+  - envoy.yaml
+  - envoy-config.yaml

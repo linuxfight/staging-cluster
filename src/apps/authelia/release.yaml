@@ -37,7 +37,7 @@ spec:
           - 'id.cloud.lxft.dev'
         parentRefs:
           - name: kube-gateway
-            namespace: nginx-gateway
+            namespace: envoy-gateway
             sectionName: https-id
 
       tls:

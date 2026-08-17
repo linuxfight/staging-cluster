@@ -1,20 +1,20 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: infra-nginx-config
+  name: infra-envoy-config
   namespace: flux-system
 spec:
   interval: 10m
   wait: true
   timeout: 5m
-  path: ./src/infra/configs/nginx
+  path: ./src/infra/configs/envoy
   prune: true
   sourceRef:
     kind: GitRepository
     name: flux-system
   dependsOn:
     - name: infra-cert-manager-config
-    - name: infra-nginx
+    - name: infra-envoy
   decryption:
     provider: sops
     secretRef:

@@ -32,7 +32,7 @@ spec:
 
   values:
     server:
-      publicUrl: https://cloud.lxft.dev
+      publicUrl: https://cloud.lxft.dev:443
       disableAnonymousMetrics: true
       disableGeoliteUpdate: true
       image:

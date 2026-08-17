@@ -9,6 +9,8 @@ spec:
   timeout: 5m
   path: ./src/infra/releases/envoy
   prune: false
+  dependsOn:
+    - name: infra-registry-creds
   sourceRef:
     kind: GitRepository
     name: flux-system

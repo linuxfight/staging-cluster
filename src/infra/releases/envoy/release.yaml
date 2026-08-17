@@ -7,7 +7,7 @@ spec:
   interval: 1h
   chartRef:
     kind: OCIRepository
-    name: gateway-helm
+    name: envoy-helm
     namespace: flux-system
   values:
     deployment:

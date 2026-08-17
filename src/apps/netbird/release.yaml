@@ -18,6 +18,9 @@ spec:
       config:
         existingSecret: "netbird-secrets"
         existingSecretKey: config.yaml
+      auth:
+        issuer: https://cloud.lxft.dev/oauth2
+        localAuthDisabled: false
       image:
         tag: "0.77.0"
       service:

@@ -32,7 +32,11 @@ spec:
 
   values:
     server:
-      publicUrl: https://cloud.lxft.dev:443
+      publicUrl: https://cloud.lxft.dev
+      config:
+        extraYaml: |
+          server:
+            exposedAddress: "https://cloud.lxft.dev:443"
       disableAnonymousMetrics: true
       disableGeoliteUpdate: true
       image:

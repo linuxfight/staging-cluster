@@ -95,6 +95,21 @@ spec:
                 - name: netbird-server
                   port: 80
 
+      - apiVersion: gateway.envoyproxy.io/v1alpha1
+        kind: BackendTrafficPolicy
+        metadata:
+          name: netbird-grpc-timeout
+          namespace: netbird
+        spec:
+          targetRefs:
+            - group: gateway.networking.k8s.io
+              kind: GRPCRoute
+              name: netbird-grpc
+          timeout:
+            http:
+              requestTimeout: "0s"
+              streamIdleTimeout: "0s"
+
       - apiVersion: gateway.networking.k8s.io/v1
         kind: HTTPRoute
         metadata:

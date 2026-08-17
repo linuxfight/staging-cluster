@@ -20,3 +20,6 @@ spec:
       gatewayClassName: nginx
       gwAPIExperimentalFeatures:
         enable: true
+    nginx:
+      config:
+        http2: true

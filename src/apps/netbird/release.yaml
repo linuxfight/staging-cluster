@@ -13,11 +13,31 @@ spec:
         name: helmforge
         namespace: flux-system
 
+  valuesFrom:
+    - kind: Secret
+      name: netbird-secrets
+      valuesKey: authSecret
+      targetPath: server.authSecret
+      optional: false
+    - kind: Secret
+      name: netbird-secrets
+      valuesKey: ownerEmail
+      targetPath: server.auth.owner.email
+      optional: false
+    - kind: Secret
+      name: netbird-secrets
+      valuesKey: ownerPassword
+      targetPath: server.auth.owner.password
+      optional: false
+
   values:
     server:
       config:
         existingSecret: "netbird-secrets"
         existingSecretKey: config.yaml
+      publicUrl: https://cloud.lxft.dev
+      disableAnonymousMetrics: true
+      disableGeoliteUpdate: true
       auth:
         issuer: https://cloud.lxft.dev/oauth2
         localAuthDisabled: false

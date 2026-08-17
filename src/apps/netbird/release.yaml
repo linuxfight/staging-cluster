@@ -19,6 +19,16 @@ spec:
       valuesKey: authSecret
       targetPath: server.authSecret
       optional: false
+    - kind: Secret
+      name: netbird-secrets
+      valuesKey: ownerEmail
+      targetPath: server.auth.owner.email
+      optional: false
+    - kind: Secret
+      name: netbird-secrets
+      valuesKey: ownerPassword
+      targetPath: server.auth.owner.password
+      optional: false
 
   values:
     server:

@@ -97,7 +97,7 @@ spec:
           parentRefs:
             - name: kube-gateway
               namespace: nginx-gateway
-              section-name: https-netbird
+              sectionName: https-netbird
           hostnames: ["cloud.lxft.dev"]
           rules:
             - matches:

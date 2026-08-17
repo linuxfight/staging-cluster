@@ -7,3 +7,4 @@ resources:
   - flux-notify.yaml
   - envoy.yaml
   - envoy-config.yaml
+  - registry-creds.yaml

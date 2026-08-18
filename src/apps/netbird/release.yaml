@@ -90,6 +90,12 @@ spec:
                   port: 80
             - matches:
                 - method:
+                    service: management.ProxyService
+              backendRefs:
+                - name: netbird-server
+                  port: 80
+            - matches:
+                - method:
                     service: signalexchange.SignalExchange
               backendRefs:
                 - name: netbird-server

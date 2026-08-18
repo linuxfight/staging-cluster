@@ -1,0 +1,14 @@
+apiVersion: gateway.networking.k8s.io/v1alpha2
+kind: TCPRoute
+metadata:
+  name: netbird-reverse-proxy-minecraft
+  namespace: netbird-proxy
+spec:
+  parentRefs:
+    - name: kube-gateway
+      namespace: envoy-gateway
+      sectionName: minecraft
+  rules:
+    - backendRefs:
+        - name: netbird-reverse-proxy
+          port: 25565

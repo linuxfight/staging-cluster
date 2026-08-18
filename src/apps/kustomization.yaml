@@ -3,3 +3,4 @@ kind: Kustomization
 resources:
   - authelia.yaml
   - netbird.yaml
+  - netbird-proxy.yaml

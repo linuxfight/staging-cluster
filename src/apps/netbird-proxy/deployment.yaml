@@ -32,6 +32,8 @@ spec:
               value: "true"
             - name: NB_PROXY_MANAGEMENT_ADDRESS
               value: "https://cloud.lxft.dev"
+            - name: NB_PROXY_DOMAIN
+              value: "cloud.lxft.dev"
             - name: NB_PROXY_ACME_CERTIFICATES
               value: "false"
             - name: NB_PROXY_LOG_LEVEL

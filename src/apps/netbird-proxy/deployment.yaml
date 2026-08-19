@@ -35,7 +35,7 @@ spec:
             - name: NB_PROXY_DOMAIN
               value: "cloud.lxft.dev"
             - name: NB_PROXY_ACME_CERTIFICATES
-              value: "false"
+              value: "true"
             - name: NB_PROXY_LOG_LEVEL
               value: info
             - name: NB_PROXY_PRIVATE

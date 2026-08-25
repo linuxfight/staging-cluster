@@ -4,3 +4,4 @@ resources:
   - authelia.yaml
   - netbird.yaml
   - netbird-proxy.yaml
+  - xtls.yaml

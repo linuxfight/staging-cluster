@@ -34,7 +34,7 @@ spec:
       gatewayAPI:
         enabled: true
         hostnamesOverride:
-          - 'id.cloud.lxft.dev'
+          - 'id.lxft.dev'
         parentRefs:
           - name: kube-gateway
             namespace: envoy-gateway
@@ -68,8 +68,7 @@ spec:
           cors:
             allowed_origins_from_client_redirect_uris: true
             allowed_origins:
-              - 'https://cloud.lxft.dev'
-              - 'http://localhost:53000'
+              - 'https://git.lxft.dev'
 
             endpoints:
               - 'userinfo'
@@ -83,19 +82,14 @@ spec:
               id_token: [email, groups, profile]
 
           clients:
-            - client_id: 'E7Aku2J-60CsjZx0YCE-5k3aQ45s1n8-gGuh1UNuNnKM12maJV_1SwHNwvqGmSfhHm8wIB0w'
-              client_name: 'NetBird'
+            - client_id: 'm6dTj21j_iYnM6WtgaBeWKO5niP0Dc7csbIkHeUYe6WC.vBtXAkdzE4YCG.5FX7lnKwAqEvH'
+              client_name: 'Git'
               client_secret:
-                path: '/secrets/authelia-secrets/oidc.clients.netbird.client_secret'
+                path: '/secrets/authelia-secrets/oidc.clients.forgejo.client_secret'
               public: false
               authorization_policy: 'two_factor'
               redirect_uris:
-                - 'https://cloud.lxft.dev/oauth2/callback'
-                - 'https://cloud.lxft.dev/nb-auth'
-                - 'https://cloud.lxft.dev/nb-silent-auth'
-                - 'http://localhost:53000'
-              audience:
-                - 'E7Aku2J-60CsjZx0YCE-5k3aQ45s1n8-gGuh1UNuNnKM12maJV_1SwHNwvqGmSfhHm8wIB0w'
+                - 'https://git.lxft.dev/user/oauth2/authelia/callback'
               scopes:
                 - 'openid'
                 - 'email'
@@ -125,8 +119,8 @@ spec:
           path: 'session.encryption.key'
         cookies:
           - subdomain: 'id'
-            domain: 'cloud.lxft.dev'
-            default_redirection_url: 'https://id.cloud.lxft.dev/'
+            domain: 'lxft.dev'
+            default_redirection_url: 'https://id.lxft.dev/'
 
       storage:
         encryption_key:
@@ -175,15 +169,15 @@ spec:
       access_control:
         default_policy: 'two_factor'
         rules:
-          - domain: 'id.cloud.lxft.dev'
+          - domain: 'id.lxft.dev'
             resources:
               - '^/\.well-known/.*$'
               - '^/oauth2/\.well-known/.*$'
               - '^/api/oidc/.*$'
             policy: 'bypass'
-          - domain: 'id.cloud.lxft.dev'
+          - domain: 'id.lxft.dev'
             policy: 'one_factor'
-          - domain: '*.cloud.lxft.dev'
+          - domain: '*.lxft.dev'
             policy: 'two_factor'
 
       theme: 'auto'
@@ -198,8 +192,8 @@ spec:
               path: 'oidc.hmac_secret'
             - key: 'oidc.jwk.main.pem'
               path: 'oidc.jwk.main.pem'
-            - key: 'oidc.clients.netbird.client_secret'
-              path: 'oidc.clients.netbird.client_secret'
+            - key: 'oidc.clients.forgejo.client_secret'
+              path: 'oidc.clients.forgejo.client_secret'
             - key: 'identity_validation.reset_password.jwt.hmac.key'
               path: 'identity_validation.reset_password.jwt.hmac.key'
             - key: 'session.encryption.key'

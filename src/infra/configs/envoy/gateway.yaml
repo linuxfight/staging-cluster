@@ -9,7 +9,7 @@ spec:
     - name: https-id
       port: 443
       protocol: HTTPS
-      hostname: id.cloud.lxft.dev
+      hostname: id.lxft.dev
       allowedRoutes:
         namespaces:
           from: All
@@ -18,31 +18,14 @@ spec:
         certificateRefs:
           - name: authelia-tls
 
-    - name: https-netbird
+    - name: https-git
       port: 443
       protocol: HTTPS
-      hostname: cloud.lxft.dev
+      hostname: git.lxft.dev
       allowedRoutes:
         namespaces:
           from: All
-        kinds:
-          - kind: HTTPRoute
-          - kind: GRPCRoute
       tls:
         mode: Terminate
         certificateRefs:
-          - name: netbird-tls
-
-    - name: stun-netbird
-      port: 3478
-      protocol: UDP
-      allowedRoutes:
-        namespaces:
-          from: All
-
-    - name: minecraft
-      protocol: TCP
-      port: 25565
-      allowedRoutes:
-        namespaces:
-          from: All
+          - name: forgejo-tls

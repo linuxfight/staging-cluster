@@ -91,4 +91,3 @@ spec:
           scopes: 'openid profile email groups'
           groupClaimName: 'groups'
           adminGroup: 'admin'
-          skipLocalTwoFa: true

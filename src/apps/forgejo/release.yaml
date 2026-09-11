@@ -45,7 +45,7 @@ spec:
     extraVolumes:
       - name: cnpg-app-secret
         secret:
-          secretName: authelia-cnpg-app
+          secretName: forgejo-cnpg-app
     extraVolumeMounts:
       - name: cnpg-app-secret
         mountPath: /run/secrets/cnpg

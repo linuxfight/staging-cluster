@@ -7,7 +7,7 @@ spec:
   parentRefs:
     - name: kube-gateway
       namespace: envoy-gateway
-      sectionName: https
+      sectionName: https-website
   hostnames:
     - "lxft.dev"
   rules:

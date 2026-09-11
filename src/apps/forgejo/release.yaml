@@ -84,7 +84,7 @@ spec:
           ACCOUNT_LINKING: auto
 
       oauth:
-        - name: 'lxft id'
+        - name: 'authelia'
           provider: 'openidConnect'
           existingSecret: forgejo-oidc-secrets
           autoDiscoverUrl: 'https://id.lxft.dev/.well-known/openid-configuration'

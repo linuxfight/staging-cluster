@@ -4,5 +4,6 @@ resources:
   - namespace.yaml
   - repo.yaml
   - cnpg.yaml
+  - route.yaml
   - oidc-secrets.yaml
   - release.yaml

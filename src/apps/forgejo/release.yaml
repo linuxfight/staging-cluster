@@ -60,7 +60,7 @@ spec:
 
         database:
           DB_TYPE: postgres
-          HOST: forgejo-db-rw.forgejo.svc.cluster.local:5432
+          HOST: forgejo-cnpg-rw.forgejo.svc.cluster.local:5432
           NAME: forgejo
           SCHEMA: public
           USER__FILE: /run/secrets/cnpg/username

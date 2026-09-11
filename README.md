@@ -2,7 +2,15 @@
 
 TODO:
 - move all repos to OCI
-- add flux ui and github app reconcilation
-- reconcile when changing secrets
 - enforce traffic policy
 - update postgres images
+
+
+TODO:
+- reconcile on secret changes
+- webhook-only reconcile
+- commit signing
+- wireguard for cluster (between infra)
+- flux ui
+- flux github/forgejo app report
+- pipelines on my runner (+ui)

@@ -6,6 +6,18 @@ metadata:
 spec:
   gatewayClassName: envoy
   listeners:
+    - name: https-website
+      port: 443
+      protocol: HTTPS
+      hostname: lxft.dev
+      allowedRoutes:
+        namespaces:
+          from: All
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: website-tls
+
     - name: https-id
       port: 443
       protocol: HTTPS

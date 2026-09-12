@@ -18,6 +18,18 @@ spec:
         certificateRefs:
           - name: website-tls
 
+    - name: https-flux
+      port: 443
+      protocol: HTTPS
+      hostname: flux.lxft.dev
+      allowedRoutes:
+        namespaces:
+          from: All
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: flux-tls
+
     - name: https-id
       port: 443
       protocol: HTTPS

@@ -5,6 +5,7 @@ resources:
   - cert-manager-config.yaml
   - cnpg.yaml
   - flux-notify.yaml
+  - flux-operator.yaml
   - envoy.yaml
   - envoy-config.yaml
   - registry-creds.yaml

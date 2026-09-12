@@ -21,7 +21,7 @@ spec:
     - name: https-flux
       port: 443
       protocol: HTTPS
-      hostname: flux.lxft.dev
+      hostname: cloud.lxft.dev
       allowedRoutes:
         namespaces:
           from: All

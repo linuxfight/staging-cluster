@@ -7,7 +7,7 @@ spec:
   interval: 10m
   timeout: 5m
   wait: true
-  path: ./src/infra/configs/cert-manager
+  path: ./src/infra/config/cert-manager
   prune: true
   sourceRef:
     kind: GitRepository

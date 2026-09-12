@@ -7,7 +7,7 @@ spec:
   interval: 1h
   wait: true
   timeout: 5m
-  path: ./src/infra/releases/cnpg
+  path: ./src/infra/base/cnpg
   prune: false
   sourceRef:
     kind: GitRepository

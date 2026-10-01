@@ -53,3 +53,15 @@ spec:
         mode: Terminate
         certificateRefs:
           - name: forgejo-tls
+
+    - name: https-pass
+      port: 443
+      protocol: HTTPS
+      hostname: pass.lxft.dev
+      allowedRoutes:
+        namespaces:
+          from: All
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: vaultwarden-tls

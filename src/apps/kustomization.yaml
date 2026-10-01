@@ -3,4 +3,5 @@ kind: Kustomization
 resources:
   - authelia.yaml
   - forgejo.yaml
+  - vaultwarden.yaml
   - website.yaml

@@ -14,4 +14,4 @@ spec:
       - action: Allow
         principal:
           clientCIDRs:
-            - "2.27.28.109/32"
+            - "152.53.22.41/32"

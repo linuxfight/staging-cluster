@@ -34,6 +34,7 @@ spec:
         class: local-path
         path: /data
         keepPvc: true
+        accessMode: ReadWriteOnce
 
     vaultwarden:
       allowSignups: false

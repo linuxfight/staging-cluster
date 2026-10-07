@@ -46,35 +46,19 @@ spec:
       admin:
         enabled: false
 
+    sso:
+      enabled: true
+      onlySSO: true
+      enforceSSO: true
+      ignoreEmailVerification: true
+      authority: "https://id.lxft.dev"
+      scopes: "profile email offline_access vaultwarden"
+      pkce: true
+      existingSecret: vaultwarden-oidc
+      clientId:
+        existingSecretKey: clientId
+      clientSecret:
+        existingSecretKey: clientSecret
+
     ingress:
       enabled: false
-
-    env:
-      - name: SIGNUPS_ALLOWED
-        value: "false"
-      - name: SSO_ENABLED
-        value: "true"
-      - name: SSO_ONLY
-        value: "true"
-      - name: SSO_PKCE
-        value: "true"
-      - name: SSO_AUTHORITY
-        value: "https://id.lxft.dev"
-      - name: SSO_SCOPES
-        value: "profile email offline_access vaultwarden"
-      - name: SSO_ROLES_ENABLED
-        value: "true"
-      - name: SSO_ROLES_DEFAULT_TO_USER
-        value: "true"
-      - name: SSO_ROLES_TOKEN_PATH
-        value: "/vaultwarden_roles"
-      - name: SSO_CLIENT_ID
-        valueFrom:
-          secretKeyRef:
-            name: vaultwarden-oidc
-            key: SSO_CLIENT_ID
-      - name: SSO_CLIENT_SECRET
-        valueFrom:
-          secretKeyRef:
-            name: vaultwarden-oidc
-            key: SSO_CLIENT_SECRET

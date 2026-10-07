@@ -7,10 +7,11 @@ TODO:
 
 
 TODO:
+- flux ui (add requirement for envoy and authelia)
 - reconcile on secret changes
 - webhook-only reconcile
 - commit signing
 - wireguard for cluster (between infra)
-- flux ui
 - flux github/forgejo app report
 - pipelines on my runner (+ui)
+- speed up reconciliation

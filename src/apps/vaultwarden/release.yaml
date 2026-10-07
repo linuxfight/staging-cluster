@@ -1,0 +1,79 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: vaultwarden
+  namespace: vaultwarden
+spec:
+  interval: 1h
+  chart:
+    spec:
+      chart: vaultwarden
+      version: 0.46.2
+      sourceRef:
+        kind: HelmRepository
+        name: vaultwarden
+        namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    remediation:
+      retries: 3
+  values:
+    domain: "https://pass.lxft.dev"
+
+    database:
+      type: postgresql
+      existingSecret: vaultwarden-cnpg-app
+      existingSecretKey: uri
+
+    storage:
+      data:
+        name: vaultwarden-data
+        size: 1Gi
+        class: local-path
+        path: /data
+        keepPvc: true
+
+    vaultwarden:
+      allowSignups: false
+      allowInvitation: false
+      verifySignup: false
+      requireEmail: false
+      smtp:
+        host: ""
+      admin:
+        enabled: false
+
+    ingress:
+      enabled: false
+
+    env:
+      - name: SIGNUPS_ALLOWED
+        value: "false"
+      - name: SSO_ENABLED
+        value: "true"
+      - name: SSO_ONLY
+        value: "true"
+      - name: SSO_PKCE
+        value: "true"
+      - name: SSO_AUTHORITY
+        value: "https://id.lxft.dev"
+      - name: SSO_SCOPES
+        value: "profile email offline_access vaultwarden"
+      - name: SSO_ROLES_ENABLED
+        value: "true"
+      - name: SSO_ROLES_DEFAULT_TO_USER
+        value: "true"
+      - name: SSO_ROLES_TOKEN_PATH
+        value: "/vaultwarden_roles"
+      - name: SSO_CLIENT_ID
+        valueFrom:
+          secretKeyRef:
+            name: vaultwarden-oidc
+            key: SSO_CLIENT_ID
+      - name: SSO_CLIENT_SECRET
+        valueFrom:
+          secretKeyRef:
+            name: vaultwarden-oidc
+            key: SSO_CLIENT_SECRET

@@ -51,6 +51,11 @@ spec:
         port: 9091
         path: ''
 
+      definitions:
+        user_attributes:
+          vaultwarden_roles:
+            expression: '"vaultwarden_admins" in groups ? ["admin"] : "vaultwarden_users" in groups ? ["user"] : [""]'
+
       identity_providers:
         oidc:
           enabled: true
@@ -64,6 +69,16 @@ spec:
               use: 'sig'
               key:
                 path: '/secrets/authelia-secrets/oidc.jwk.main.pem'
+
+          claims_policies:
+            vaultwarden:
+              id_token: ['vaultwarden_roles']
+              custom_claims:
+                vaultwarden_roles: {}
+
+          scopes:
+            vaultwarden:
+              claims: ['vaultwarden_roles']
 
           cors:
             allowed_origins_from_client_redirect_uris: true
@@ -85,19 +100,25 @@ spec:
                 path: '/secrets/authelia-secrets/oidc.clients.vaultwarden.client_secret'
               public: false
               authorization_policy: 'two_factor'
+              require_pkce: true
+              pkce_challenge_method: 'S256'
+              claims_policy: 'vaultwarden'
               redirect_uris:
                 - 'https://pass.lxft.dev/identity/connect/oidc-signin'
               scopes:
                 - 'openid'
-                - 'email'
+                - 'offline_access'
                 - 'profile'
-                - 'groups'
+                - 'email'
+                - 'vaultwarden'
               response_types:
                 - 'code'
               grant_types:
                 - 'authorization_code'
+                - 'refresh_token'
+              access_token_signed_response_alg: 'none'
               userinfo_signed_response_alg: 'none'
-              token_endpoint_auth_method: 'client_secret_post'
+              token_endpoint_auth_method: 'client_secret_basic'
 
             - client_id: 'm6dTj21j_iYnM6WtgaBeWKO5niP0Dc7csbIkHeUYe6WC.vBtXAkdzE4YCG.5FX7lnKwAqEvH'
               client_name: 'Git'

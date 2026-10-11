@@ -6,4 +6,3 @@ resources:
   - cnpg.yaml
   - secrets.yaml
   - release.yaml
-  - route.yaml

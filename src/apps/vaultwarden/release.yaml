@@ -64,12 +64,8 @@ spec:
       enabled: false
 
     httpRoute:
-      apiVersion: gateway.networking.k8s.io/v1
-      kind: HTTPRoute
-      metadata:
-        name: vaultwarden
-        namespace: vaultwarden
-      spec:
+      main:
+        enabled: true
         parentRefs:
           - name: kube-gateway
             namespace: envoy-gateway

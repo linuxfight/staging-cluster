@@ -70,6 +70,11 @@ spec:
               key:
                 path: '/secrets/authelia-secrets/oidc.jwk.main.pem'
 
+          lifespans:
+            access_token: '1w'
+            refresh_token: '1y'
+            id_token: '1w'
+
           claims_policies:
             vaultwarden:
               id_token: ['vaultwarden_roles']
@@ -149,9 +154,9 @@ spec:
       session:
         name: 'authelia_session'
         same_site: 'lax'
-        expiration: '1 hour'
-        inactivity: '5 minutes'
-        remember_me: '1 month'
+        expiration: '1w'
+        inactivity: '1w'
+        remember_me: '1w'
         encryption_key:
           secret_name: 'authelia-secrets'
           path: 'session.encryption.key'
